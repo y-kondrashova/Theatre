@@ -47,7 +47,7 @@ class Performance(models.Model):
     show_time = models.DateTimeField()
 
     def __str__(self):
-        return
+        return f"{self.play} - {self.show_time}"
 
 
 class Reservation(models.Model):
@@ -55,3 +55,22 @@ class Reservation(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
+
+
+class Ticket(models.Model):
+    row = models.IntegerField()
+    seat = models.IntegerField()
+
+    performance = models.ForeignKey(
+        Performance, on_delete=models.CASCADE, related_name="tickets"
+    )
+
+    reservation = models.ForeignKey(
+        Reservation, on_delete=models.CASCADE, related_name="tickets"
+    )
+
+    def __str__(self):
+        return f"{self.performance} - (row: {self.row}, seat: {self.seat})"
+
+    class Meta:
+        unique_together = ("row", "seat", "performance")
