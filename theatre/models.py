@@ -14,3 +14,14 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Play(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+
+    actors = models.ManyToManyField(Actor)
+    genres = models.ManyToManyField(Genre)
+
+    def __str__(self):
+        return self.title
