@@ -84,6 +84,13 @@ class PerformanceListSerializer(PerformanceSerializer):
     )
 
 
+class PerformanceDetailSerializer(PerformanceSerializer):
+    play = PlayListSerializer(read_only=True)
+    theatre_hall = serializers.SlugRelatedField(
+        read_only=True, slug_field="name",
+    )
+
+
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
