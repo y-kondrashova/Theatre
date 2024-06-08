@@ -40,6 +40,10 @@ class TheatreHall(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def capacity(self):
+        return self.rows * self.seats_in_row
+
 
 class Performance(models.Model):
     play = models.ForeignKey(
