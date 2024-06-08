@@ -6,6 +6,7 @@ from theatre.models import (
     Play,
     TheatreHall,
     Performance,
+    Reservation,
 )
 
 
@@ -37,3 +38,9 @@ class PerformanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performance
         fields = ["id", "play", "theatre_hall", "show_time"]
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ["id", "created_at", "user"]
