@@ -36,7 +36,6 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("actors", "genres")
-    serializer_class = PlaySerializer
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -49,7 +48,6 @@ class PlayViewSet(viewsets.ModelViewSet):
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
     queryset = TheatreHall.objects.all()
-    serializer_class = TheatreHallSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -61,7 +59,6 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.select_related("play", "theatre_hall")
-    serializer_class = PerformanceSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
