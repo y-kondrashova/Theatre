@@ -73,5 +73,5 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.select_related("reservation", "performance__play")
     serializer_class = TicketSerializer
