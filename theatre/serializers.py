@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from theatre.models import (
@@ -9,6 +10,8 @@ from theatre.models import (
     Reservation,
     Ticket,
 )
+
+User = get_user_model()
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -92,6 +95,8 @@ class PerformanceDetailSerializer(PerformanceSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Reservation
         fields = ["id", "created_at", "user"]
