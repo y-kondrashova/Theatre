@@ -63,6 +63,12 @@ class TheatreHallListSerializer(TheatreHallSerializer):
         fields = ["id", "name", "capacity"]
 
 
+class TheatreHallDetailSerializer(TheatreHallSerializer):
+    class Meta:
+        model = TheatreHall
+        fields = ["id", "name", "rows", "seats_in_row", "capacity"]
+
+
 class PerformanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Performance
