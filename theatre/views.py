@@ -10,6 +10,7 @@ from theatre.serializers import (
     GenreSerializer,
     PlaySerializer,
     PlayListSerializer,
+    PlayDetailSerializer,
 )
 
 
@@ -24,11 +25,13 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 
 class PlayViewSet(viewsets.ModelViewSet):
-    queryset = Play.objects.all()
+    queryset = Play.objects.prefetch_related("actors", "genres")
     serializer_class = PlaySerializer
 
     def get_serializer_class(self):
         if self.action == "list":
             return PlayListSerializer
+        if self.action == "retrieve":
+            return PlayDetailSerializer
 
         return PlaySerializer
