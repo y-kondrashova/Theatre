@@ -84,9 +84,14 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 
 class TicketViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.select_related(
-        "reservation", "performance__play"
-    )
     serializer_class = TicketSerializer
     authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return (
+            Ticket.objects
+            .select_related("performance__play", "reservation")
+            .filter(reservation__user=user)
+        )
