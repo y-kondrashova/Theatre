@@ -32,7 +32,7 @@ class UserCannotCreateTest(TestCase):
         response = self.client.post(
             reverse("theatre:genres-list"), data, format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_actor(self):
         self.client.credentials()
@@ -44,7 +44,7 @@ class UserCannotCreateTest(TestCase):
         response = self.client.post(
             reverse("theatre:actors-list"), data, format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_theatre_hall(self):
         self.client.credentials()
@@ -57,7 +57,7 @@ class UserCannotCreateTest(TestCase):
         response = self.client.post(
             reverse("theatre:theatre_halls-list"), data, format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_play(self):
         self.client.credentials()
@@ -71,7 +71,7 @@ class UserCannotCreateTest(TestCase):
         response = self.client.post(
             reverse("theatre:plays-list"), data, format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_performance(self):
         self.client.credentials()
@@ -84,7 +84,7 @@ class UserCannotCreateTest(TestCase):
         response = self.client.post(
             reverse("theatre:performances-list"), data, format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class AdminCanCreateTest(TestCase):
