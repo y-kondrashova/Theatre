@@ -1,4 +1,8 @@
+from django.contrib.auth import get_user_model
+
 from theatre.models import Actor, Genre, TheatreHall, Play
+
+User = get_user_model()
 
 
 def sample_actor(**params):
@@ -32,3 +36,18 @@ def sample_play(**params):
     }
     defaults.update(params)
     return Play.objects.create(**defaults)
+
+
+def sample_user(is_superuser):
+    if is_superuser:
+        return User.objects.create_superuser(
+            username="admin",
+            password="adminpass",
+            email="admin@example.com"
+        )
+    else:
+        return User.objects.create_user(
+            username="user",
+            password="userpass",
+            email="user@example.com"
+        )

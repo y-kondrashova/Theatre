@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -9,9 +8,8 @@ from theatre.test.samples import (
     sample_genre,
     sample_theatre_hall,
     sample_play,
+    sample_user,
 )
-
-User = get_user_model()
 
 
 class UserCannotCreateTest(TestCase):
@@ -22,9 +20,10 @@ class UserCannotCreateTest(TestCase):
         self.play = sample_play()
         self.play.actors.set([self.actor])
         self.play.genres.set([self.genre])
+        self.user = sample_user(is_superuser=False)
 
         self.client = APIClient()
-        self.client.login(username="user", password="secretpass")
+        self.client.force_authenticate(user=self.user)
 
     def test_user_create_genre(self):
         self.client.credentials()
@@ -91,11 +90,7 @@ class UserCannotCreateTest(TestCase):
 class AdminCanCreateTest(TestCase):
 
     def setUp(self):
-        self.admin_user = User.objects.create_superuser(
-            username="admin",
-            password="adminpass",
-            email="admin@example.com"
-        )
+        self.admin_user = sample_user(is_superuser=True)
         self.client = APIClient()
         self.client.force_authenticate(user=self.admin_user)
 
