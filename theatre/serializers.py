@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from theatre.models import (
     Actor,
@@ -108,6 +109,12 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ["id", "row", "seat", "performance", "reservation"]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ticket.objects.all(),
+                fields=["row", "seat", "performance"]
+            )
+        ]
 
     def create(self, validated_data):
         reservation_data = validated_data.pop("reservation")
