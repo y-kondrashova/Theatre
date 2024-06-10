@@ -37,7 +37,9 @@ class UserCannotCreateTest(BaseTestCase):
     def test_user_create_genre(self):
         self.client.credentials()
         data = {"name": "Test Genre"}
-        self.create_entity("theatre:genres-list", data, status.HTTP_403_FORBIDDEN)
+        self.create_entity(
+            "theatre:genres-list", data, status.HTTP_403_FORBIDDEN
+        )
 
     def test_user_create_actor(self):
         self.client.credentials()
@@ -45,7 +47,9 @@ class UserCannotCreateTest(BaseTestCase):
             "first_name": "John",
             "last_name": "Doe",
         }
-        self.create_entity("theatre:actors-list", data, status.HTTP_403_FORBIDDEN)
+        self.create_entity(
+            "theatre:actors-list", data, status.HTTP_403_FORBIDDEN
+        )
 
     def test_user_create_theatre_hall(self):
         self.client.credentials()
@@ -54,7 +58,9 @@ class UserCannotCreateTest(BaseTestCase):
             "rows": 10,
             "seats_in_row": 15
         }
-        self.create_entity("theatre:theatre_halls-list", data, status.HTTP_403_FORBIDDEN)
+        self.create_entity(
+            "theatre:theatre_halls-list", data, status.HTTP_403_FORBIDDEN
+        )
 
     def test_user_create_play(self):
         self.client.credentials()
@@ -64,7 +70,9 @@ class UserCannotCreateTest(BaseTestCase):
             "actors": [self.actor.id],
             "genres": [self.genre.id],
         }
-        self.create_entity("theatre:plays-list", data, status.HTTP_403_FORBIDDEN)
+        self.create_entity(
+            "theatre:plays-list", data, status.HTTP_403_FORBIDDEN
+        )
 
     def test_user_create_performance(self):
         self.client.credentials()
@@ -73,7 +81,9 @@ class UserCannotCreateTest(BaseTestCase):
             "theatre_hall": self.theatre_hall.id,
             "show_time": "2024-06-23T17:00:00Z"
         }
-        self.create_entity("theatre:performances-list", data, status.HTTP_403_FORBIDDEN)
+        self.create_entity(
+            "theatre:performances-list", data, status.HTTP_403_FORBIDDEN
+        )
 
 
 class AdminCanCreateTest(BaseTestCase):
@@ -87,12 +97,16 @@ class AdminCanCreateTest(BaseTestCase):
     def test_admin_create_actor(self):
         self.client.credentials()
         data = {"first_name": "John", "last_name": "Doe"}
-        self.create_entity("theatre:actors-list", data, status.HTTP_201_CREATED)
+        self.create_entity(
+            "theatre:actors-list", data, status.HTTP_201_CREATED
+        )
 
     def test_admin_create_genre(self):
         self.client.credentials()
         data = {"name": "Test Genre"}
-        self.create_entity("theatre:genres-list", data, status.HTTP_201_CREATED)
+        self.create_entity(
+            "theatre:genres-list", data, status.HTTP_201_CREATED
+        )
 
     def test_admin_create_play(self):
         self.client.credentials()
@@ -102,4 +116,6 @@ class AdminCanCreateTest(BaseTestCase):
             "actors": [self.actor.id],
             "genres": [self.genre.id],
         }
-        self.create_entity("theatre:plays-list", data, status.HTTP_201_CREATED)
+        self.create_entity(
+            "theatre:plays-list", data, status.HTTP_201_CREATED
+        )
