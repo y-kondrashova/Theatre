@@ -90,6 +90,9 @@ class UserCannotCreateTest(TestCase):
 class AdminCanCreateTest(TestCase):
 
     def setUp(self):
+        self.actor = sample_actor()
+        self.genre = sample_genre()
+
         self.admin_user = sample_user(is_superuser=True)
         self.client = APIClient()
         self.client.force_authenticate(user=self.admin_user)
@@ -109,5 +112,19 @@ class AdminCanCreateTest(TestCase):
 
         response = self.client.post(
             reverse("theatre:genres-list"), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_admin_create_play(self):
+        self.client.credentials()
+        data = {
+            "title": "Test Play",
+            "description": "Test Description",
+            "actors": [self.actor.id],
+            "genres": [self.genre.id],
+        }
+
+        response = self.client.post(
+            reverse("theatre:plays-list"), data, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
