@@ -130,3 +130,14 @@ class AdminCanCreateTest(BaseTestCase):
         self.create_entity(
             "theatre:theatre_halls-list", data, status.HTTP_201_CREATED
         )
+
+    def test_admin_create_performance(self):
+        self.client.credentials()
+        data = {
+            "play": self.play.id,
+            "theatre_hall": self.theatre_hall.id,
+            "show_time": "2024-06-23T17:00:00Z"
+        }
+        self.create_entity(
+            "theatre:performances-list", data, status.HTTP_201_CREATED
+        )
