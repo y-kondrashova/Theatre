@@ -1,4 +1,4 @@
-from theatre.models import Actor
+from theatre.models import Actor, Genre
 
 
 def sample_actor(**params):
@@ -6,3 +6,10 @@ def sample_actor(**params):
     defaults.update(params)
 
     return Actor.objects.create(**defaults)
+
+
+def sample_genre(**params):
+    defaults = {"name": "Test Genre"}
+    defaults.update(params)
+
+    return Genre.objects.create(**defaults)
