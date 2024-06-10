@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,6 +24,9 @@ SECRET_KEY = "django-insecure--_$^)8=2y+hk7ll19dsso-aock4p9kt+i49)2ut%&61)n@gp(t
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+TESTING_MODE = "test" in sys.argv
+DEV_MODE = DEBUG and not TESTING_MODE
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "debug_toolbar",
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
@@ -51,7 +53,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -59,6 +60,13 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+
+if DEV_MODE:
+    INSTALLED_APPS += [
+        "debug_toolbar"
+    ]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware", ]
 
 ROOT_URLCONF = "theatre_service.urls"
 
