@@ -1,4 +1,4 @@
-from theatre.models import Actor, Genre
+from theatre.models import Actor, Genre, TheatreHall
 
 
 def sample_actor(**params):
@@ -13,3 +13,13 @@ def sample_genre(**params):
     defaults.update(params)
 
     return Genre.objects.create(**defaults)
+
+
+def sample_theatre_hall(**params):
+    defaults = {
+        "name": "Test Hall",
+        "rows": 10,
+        "seats_in_row": 15
+    }
+    defaults.update(params)
+    return TheatreHall.objects.create(**defaults)
