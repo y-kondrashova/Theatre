@@ -1,6 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from theatre.models import (
@@ -9,7 +10,7 @@ from theatre.models import (
     Play,
     TheatreHall,
     Performance,
-    Ticket,
+    Ticket, Reservation,
 )
 from theatre.serializers import (
     ActorSerializer,
@@ -90,8 +91,16 @@ class TicketViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return (
-            Ticket.objects
-            .select_related("performance__play", "reservation")
-            .filter(reservation__user=user)
-        )
+        return Ticket.objects.select_related("performance__play", "reservation").filter(reservation__user=user)
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        reservation = Reservation.objects.create(user=user)
+        serializer.save(reservation=reservation)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

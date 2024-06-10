@@ -104,36 +104,14 @@ class ReservationSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    reservation = ReservationSerializer()
-
     class Meta:
         model = Ticket
-        fields = ["id", "row", "seat", "performance", "reservation"]
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Ticket.objects.all(),
-                fields=["row", "seat", "performance"]
-            )
-        ]
+        fields = ["id", "row", "seat", "performance"]
 
     def create(self, validated_data):
-        reservation_data = validated_data.pop("reservation")
-        reservation = Reservation.objects.create(**reservation_data)
-        ticket = Ticket.objects.create(
-            reservation=reservation, **validated_data
-        )
+        reservation = validated_data.pop("reservation", None)  # Remove reservation from validated_data
+        user = self.context['request'].user
+        if not reservation:  # If reservation is not provided, create a new one
+            reservation = Reservation.objects.create(user=user)
+        ticket = Ticket.objects.create(reservation=reservation, **validated_data)
         return ticket
-
-    def update(self, instance, validated_data):
-        reservation_data = validated_data.pop("reservation")
-        reservation = Reservation.objects.create(**reservation_data)
-
-        instance.row = validated_data.get("row", instance.row)
-        instance.seat = validated_data.get("seat", instance.seat)
-        instance.performance = validated_data.get(
-            "performance", instance.performance
-        )
-        instance.reservation = reservation
-        instance.save()
-
-        return instance
