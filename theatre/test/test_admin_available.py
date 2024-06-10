@@ -12,7 +12,7 @@ from theatre.test.samples import (
 )
 
 
-class UserCannotCreateTest(TestCase):
+class BaseTestCase(TestCase):
     def setUp(self):
         self.actor = sample_actor()
         self.genre = sample_genre()
@@ -20,19 +20,24 @@ class UserCannotCreateTest(TestCase):
         self.play = sample_play()
         self.play.actors.set([self.actor])
         self.play.genres.set([self.genre])
-        self.user = sample_user(is_superuser=False)
-
         self.client = APIClient()
+
+    def create_entity(self, url, data, expected_status):
+        response = self.client.post(reverse(url), data, format="json")
+        self.assertEqual(response.status_code, expected_status)
+        return response
+
+
+class UserCannotCreateTest(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = sample_user(is_superuser=False)
         self.client.force_authenticate(user=self.user)
 
     def test_user_create_genre(self):
         self.client.credentials()
         data = {"name": "Test Genre"}
-
-        response = self.client.post(
-            reverse("theatre:genres-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.create_entity("theatre:genres-list", data, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_actor(self):
         self.client.credentials()
@@ -40,11 +45,7 @@ class UserCannotCreateTest(TestCase):
             "first_name": "John",
             "last_name": "Doe",
         }
-
-        response = self.client.post(
-            reverse("theatre:actors-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.create_entity("theatre:actors-list", data, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_theatre_hall(self):
         self.client.credentials()
@@ -53,11 +54,7 @@ class UserCannotCreateTest(TestCase):
             "rows": 10,
             "seats_in_row": 15
         }
-
-        response = self.client.post(
-            reverse("theatre:theatre_halls-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.create_entity("theatre:theatre_halls-list", data, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_play(self):
         self.client.credentials()
@@ -67,11 +64,7 @@ class UserCannotCreateTest(TestCase):
             "actors": [self.actor.id],
             "genres": [self.genre.id],
         }
-
-        response = self.client.post(
-            reverse("theatre:plays-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.create_entity("theatre:plays-list", data, status.HTTP_403_FORBIDDEN)
 
     def test_user_create_performance(self):
         self.client.credentials()
@@ -80,40 +73,26 @@ class UserCannotCreateTest(TestCase):
             "theatre_hall": self.theatre_hall.id,
             "show_time": "2024-06-23T17:00:00Z"
         }
-
-        response = self.client.post(
-            reverse("theatre:performances-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.create_entity("theatre:performances-list", data, status.HTTP_403_FORBIDDEN)
 
 
-class AdminCanCreateTest(TestCase):
+class AdminCanCreateTest(BaseTestCase):
 
     def setUp(self):
-        self.actor = sample_actor()
-        self.genre = sample_genre()
+        super().setUp()
 
         self.admin_user = sample_user(is_superuser=True)
-        self.client = APIClient()
         self.client.force_authenticate(user=self.admin_user)
 
     def test_admin_create_actor(self):
         self.client.credentials()
         data = {"first_name": "John", "last_name": "Doe"}
-
-        response = self.client.post(
-            reverse("theatre:actors-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.create_entity("theatre:actors-list", data, status.HTTP_201_CREATED)
 
     def test_admin_create_genre(self):
         self.client.credentials()
         data = {"name": "Test Genre"}
-
-        response = self.client.post(
-            reverse("theatre:genres-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.create_entity("theatre:genres-list", data, status.HTTP_201_CREATED)
 
     def test_admin_create_play(self):
         self.client.credentials()
@@ -123,8 +102,4 @@ class AdminCanCreateTest(TestCase):
             "actors": [self.actor.id],
             "genres": [self.genre.id],
         }
-
-        response = self.client.post(
-            reverse("theatre:plays-list"), data, format="json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.create_entity("theatre:plays-list", data, status.HTTP_201_CREATED)
