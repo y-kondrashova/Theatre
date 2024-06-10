@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from theatre.models import Actor, Genre, TheatreHall, Play
+
+User = get_user_model()
 
 
 class UserCannotCreateTest(TestCase):
@@ -82,3 +85,15 @@ class UserCannotCreateTest(TestCase):
             reverse("theatre:performances-list"), data, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AdminCanCreateTest(TestCase):
+
+    def setUp(self):
+        self.admin_user = User.objects.create_superuser(
+            username="admin",
+            password="adminpass",
+            email="admin@example.com"
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.admin_user)
