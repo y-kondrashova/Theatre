@@ -42,3 +42,16 @@ class UserCannotCreateTest(TestCase):
             reverse("theatre:actors-list"), data, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_user_create_theatre_hall(self):
+        self.client.credentials()
+        data = {
+            "name": "Test Hall",
+            "rows": 10,
+            "seats_in_row": 15
+        }
+
+        response = self.client.post(
+            reverse("theatre:theatre_halls-list"), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
