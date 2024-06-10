@@ -4,14 +4,15 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
-from theatre.models import Actor, Genre, TheatreHall, Play
+from theatre.models import Genre, TheatreHall, Play
+from theatre.test.samples import sample_actor
 
 User = get_user_model()
 
 
 class UserCannotCreateTest(TestCase):
     def setUp(self):
-        self.actor = Actor.objects.create(first_name="John", last_name="Doe")
+        self.actor = sample_actor()
         self.genre = Genre.objects.create(name="Test Genre")
         self.theatre_hall = TheatreHall.objects.create(
             name="Test Hall", rows=10, seats_in_row=15
