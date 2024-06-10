@@ -97,3 +97,12 @@ class AdminCanCreateTest(TestCase):
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.admin_user)
+
+    def test_admin_create_actor(self):
+        self.client.credentials()
+        data = {"first_name": "John", "last_name": "Doe"}
+
+        response = self.client.post(
+            reverse("theatre:actors-list"), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
