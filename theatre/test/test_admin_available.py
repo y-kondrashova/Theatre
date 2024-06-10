@@ -106,3 +106,12 @@ class AdminCanCreateTest(TestCase):
             reverse("theatre:actors-list"), data, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_admin_create_genre(self):
+        self.client.credentials()
+        data = {"name": "Test Genre"}
+
+        response = self.client.post(
+            reverse("theatre:genres-list"), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
