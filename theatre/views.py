@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -46,7 +46,7 @@ class GenreViewSet(viewsets.ModelViewSet):
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("actors", "genres")
     authentication_classes = [TokenAuthentication, JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -91,7 +91,11 @@ class TicketViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Ticket.objects.select_related("performance__play", "reservation").filter(reservation__user=user)
+        return (
+            Ticket.objects
+            .select_related("performance__play", "reservation")
+            .filter(reservation__user=user)
+        )
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -103,4 +107,8 @@ class TicketViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
