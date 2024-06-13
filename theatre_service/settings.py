@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 import sys
 from pathlib import Path
@@ -68,10 +69,10 @@ MIDDLEWARE = [
 
 
 if DEV_MODE:
-    INSTALLED_APPS += [
-        "debug_toolbar"
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
-    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware", ]
 
 ROOT_URLCONF = "theatre_service.urls"
 
@@ -161,4 +162,13 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 20,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theatre API",
+    "DESCRIPTION": "Theatre service that allows visitors of the Theatre to"
+    " make Reservations online and choose needed seats, "
+    "without going physically to the Theatre.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
