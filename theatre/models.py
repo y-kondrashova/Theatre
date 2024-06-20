@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import UniqueConstraint
 
 
 class Actor(models.Model):
@@ -83,4 +84,9 @@ class Ticket(models.Model):
         return f"{self.performance} - (row: {self.row}, seat: {self.seat})"
 
     class Meta:
-        unique_together = ("row", "seat", "performance")
+        constraints = [
+            UniqueConstraint(
+                fields=["row", "seat", "performance"],
+                name="unique_ticket"
+            )
+        ]
