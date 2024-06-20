@@ -1,8 +1,6 @@
 from rest_framework import viewsets, status
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from theatre.models import (
     Actor,
@@ -33,20 +31,17 @@ from user.permissions import IsAdminOrReadOnly
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
-    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("actors", "genres")
-    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = PlaySerializer
 
@@ -61,7 +56,6 @@ class PlayViewSet(viewsets.ModelViewSet):
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
     queryset = TheatreHall.objects.all()
-    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = TheatreHallSerializer
 
@@ -75,7 +69,6 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.select_related("play", "theatre_hall")
-    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = PerformanceSerializer
 
@@ -90,7 +83,6 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
-    authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
