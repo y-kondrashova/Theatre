@@ -48,6 +48,7 @@ class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("actors", "genres")
     authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
+    serializer_class = PlaySerializer
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -55,26 +56,28 @@ class PlayViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return PlayDetailSerializer
 
-        return PlaySerializer
+        return self.serializer_class
 
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
     queryset = TheatreHall.objects.all()
     authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
+    serializer_class = TheatreHallSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
             return TheatreHallListSerializer
         if self.action == "retrieve":
             return TheatreHallDetailSerializer
-        return TheatreHallSerializer
+        return self.serializer_class
 
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.select_related("play", "theatre_hall")
     authentication_classes = [TokenAuthentication, JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
+    serializer_class = PerformanceSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -82,7 +85,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return PerformanceDetailSerializer
 
-        return PerformanceSerializer
+        return self.serializer_class
 
 
 class TicketViewSet(viewsets.ModelViewSet):
