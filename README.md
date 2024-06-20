@@ -6,19 +6,37 @@ API service for theatre management written on DRF
 
 Install PostgresSQL and create db
 
+```shell
+  git clone https://github.com/y-kondrashova/Theatre.git
 ```
-    git clone https://github.com/y-kondrashova/Theatre.git
-    cd Theatre
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
-    set POSTGRES_HOST=<your db hostname>
-    set POSTGRES_DB=<your db name>
-    set POSTGRES_USER=<your db username>
-    set POSTGRES_PASSWORD=<your db password>
-    set SECRET_KEY=<your secret key>
-    python manage.py migrate
-    python manage.py runserver
+```shell
+  cd Theatre
+```
+```shell
+  python -m venv venv
+```
+```shell
+  source venv/bin/activate
+```
+```shell
+  pip install -r requirements.txt
+```
+   Add .env file to the project
+```
+   In .env:
+   
+   set POSTGRES_HOST=<your db hostname>
+   set POSTGRES_DB=<your db name>
+   set POSTGRES_USER=<your db username>
+   set POSTGRES_PASSWORD=<your db password>
+   set SECRET_KEY=<your secret key>
+```
+
+```shell
+  python manage.py migrate
+```
+```shell
+  python manage.py runserver
 ```
 
 ## Run with docker
