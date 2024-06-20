@@ -7,7 +7,7 @@ class Actor(models.Model):
     last_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return self.full_name
 
     @property
     def full_name(self):
