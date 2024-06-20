@@ -25,24 +25,20 @@ from theatre.serializers import (
     PerformanceDetailSerializer,
     TicketSerializer,
 )
-from user.permissions import IsAdminOrReadOnly
 
 
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
-    permission_classes = [IsAdminOrReadOnly]
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAdminOrReadOnly]
 
 
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("actors", "genres")
-    permission_classes = [IsAdminOrReadOnly]
     serializer_class = PlaySerializer
 
     def get_serializer_class(self):
@@ -56,7 +52,6 @@ class PlayViewSet(viewsets.ModelViewSet):
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
     queryset = TheatreHall.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
     serializer_class = TheatreHallSerializer
 
     def get_serializer_class(self):
@@ -69,7 +64,6 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.select_related("play", "theatre_hall")
-    permission_classes = [IsAdminOrReadOnly]
     serializer_class = PerformanceSerializer
 
     def get_serializer_class(self):
